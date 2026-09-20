@@ -154,22 +154,22 @@ function App() {
       </AnimatePresence>
 
       {/* Main workspace */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-4">
         {/* Mobile tab navigation */}
-        <div className="lg:hidden sticky top-16 z-40 -mx-4 px-4 py-2 bg-zinc-950/90 backdrop-blur-sm border-b border-zinc-800/50">
-          <div className="flex gap-1">
+        <div className="lg:hidden sticky top-16 z-30 py-3 -mx-4 px-4 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800/50">
+          <div className="flex gap-1 max-w-full overflow-x-auto">
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setMobilePanel(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${
                   mobilePanel === tab.id 
                     ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' 
                     : 'text-zinc-500 hover:text-zinc-300'
                 }`}
               >
-                <tab.icon className="w-3.5 h-3.5" />
-                {tab.label}
+                <tab.icon className="w-3.5 h-3.5 flex-shrink-0" />
+                <span className="truncate">{tab.label}</span>
               </button>
             ))}
           </div>
@@ -190,10 +190,10 @@ function App() {
               </div>
 
               {/* Desktop: 3-column layout */}
-              <div className="hidden lg:grid lg:grid-cols-12 gap-6">
+              <div className="hidden lg:grid lg:grid-cols-12 gap-4 xl:gap-6">
                 {/* Controls Panel */}
-                <div className="col-span-3">
-                  <div className="glass-panel rounded-2xl p-4 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
+                <div className="col-span-12 xl:col-span-3 lg:col-span-3">
+                  <div className="glass-panel rounded-2xl p-4 lg:sticky lg:top-20 max-h-[80vh] overflow-y-auto">
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-sm font-semibold text-zinc-200 flex items-center gap-2">
                         <Settings className="w-4 h-4 text-cyan-400" />
@@ -222,13 +222,13 @@ function App() {
                 </div>
 
                 {/* Preview Panel */}
-                <div className="col-span-6">
+                <div className="col-span-12 lg:col-span-6 min-w-0">
                   <PreviewPanel outputRef={outputRef} />
                 </div>
 
                 {/* Export Panel */}
-                <div className="col-span-3">
-                  <div className="glass-panel rounded-2xl p-4 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
+                <div className="col-span-12 xl:col-span-3 lg:col-span-3">
+                  <div className="glass-panel rounded-2xl p-4 lg:sticky lg:top-20 max-h-[80vh] overflow-y-auto">
                     <h2 className="text-sm font-semibold text-zinc-200 flex items-center gap-2 mb-4">
                       <Download className="w-4 h-4 text-cyan-400" />
                       Export & Share
@@ -239,7 +239,7 @@ function App() {
               </div>
 
               {/* Mobile: Tab-based layout */}
-              <div className="lg:hidden">
+              <div className="lg:hidden mt-4">
                 <AnimatePresence mode="wait">
                   {mobilePanel === 'upload' && (
                     <motion.div
@@ -301,7 +301,7 @@ function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-zinc-500">
             <Layers className="w-4 h-4" />
-            <span>AsciiForge — All processing happens locally in your browser.</span>
+            <span>Pixel to ASCII — All processing happens locally in your browser.</span>
           </div>
           <div className="flex items-center gap-4 text-xs text-zinc-600">
             <span className="flex items-center gap-1">

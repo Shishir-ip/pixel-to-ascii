@@ -8,7 +8,7 @@ interface HeroProps {
 
 export function Hero({ onUploadClick, onTryDemo }: HeroProps) {
   return (
-    <section className="relative pt-24 pb-12 px-4 overflow-hidden">
+    <section className="relative pt-28 pb-12 px-4 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-transparent pointer-events-none" />
       <div className="absolute top-20 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />

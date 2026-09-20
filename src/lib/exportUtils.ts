@@ -21,7 +21,7 @@ export function downloadHtmlFile(content: string, settings: AsciiSettings): void
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ASCII Art - AsciiForge</title>
+<title>ASCII Art - Pixel to ASCII</title>
 <style>
 body { 
   background: ${bgColor}; 
@@ -230,7 +230,7 @@ export function exportSettings(settings: AsciiSettings): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'asciiforge-settings.json';
+  a.download = 'pixel-to-ascii-settings.json';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

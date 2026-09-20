@@ -96,7 +96,7 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
       </div>
 
       {/* Output */}
-      <div className={`overflow-auto max-h-[500px] p-4 ${bgColor}`}>
+      <div className={`overflow-x-auto overflow-y-auto max-h-[500px] p-4 ${bgColor}`}>
         {isColoredMode ? (
           <pre
             ref={outputRef}

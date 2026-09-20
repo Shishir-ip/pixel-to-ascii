@@ -24,7 +24,7 @@ export function Navbar() {
               <Zap className="w-5 h-5 text-white" />
             </div>
             <span className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">
-              AsciiForge
+              Pixel to ASCII
             </span>
           </div>
 
