@@ -39,7 +39,7 @@ interface AppState {
   loadState: () => void;
 }
 
-const STORAGE_KEY = 'asciiforge-state';
+const STORAGE_KEY = 'pixel-to-ascii-state';
 
 function loadFromStorage(): Partial<{ settings: AsciiSettings; savedPresets: Preset[] }> {
   try {

@@ -1,8 +1,8 @@
-# AsciiForge ⚡
+# Pixel to ASCII ⚡
 
 > Turn any image into stunning ASCII and emoji art. Private, instant, and fully customizable.
 
-![AsciiForge](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Tailwind](https://img.shields.io/badge/Tailwind-4-cyan) ![License](https://img.shields.io/badge/License-MIT-green)
+![Pixel to ASCII](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Tailwind](https://img.shields.io/badge/Tailwind-4-cyan) ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## ✨ Features
 
@@ -42,6 +42,27 @@ npm run build
 - **Zustand** - State management
 - **Lucide React** - Icons
 - **HTML5 Canvas API** - Image processing
+
+## 📦 Deployment
+
+### Vercel
+```bash
+npm install -g vercel
+vercel
+```
+
+### Netlify
+```bash
+npm run build
+# Deploy the dist/ folder
+```
+
+### Cloudflare Pages
+```bash
+npm run build
+# Connect your repo and set build command to: npm run build
+# Set output directory to: dist
+```
 
 ## 📦 Deployment
 
