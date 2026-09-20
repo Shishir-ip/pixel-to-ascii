@@ -6,6 +6,7 @@ import {
   Type, Palette, Sliders, FlipHorizontal, 
   Sun, Grid3X3, RotateCcw
 } from 'lucide-react';
+import { ProTip } from './ProTip';
 
 interface ControlsPanelProps {
   onChange: () => void;
@@ -258,13 +259,21 @@ export function ControlsPanel({ onChange }: ControlsPanelProps) {
           onChange={(v) => triggerUpdate({ saturation: v })}
           unit="%"
         />
-        <SliderControl
-          label="Gamma"
-          value={settings.gamma}
+        <div className="flex items-center">
+          <span className="text-xs font-medium text-zinc-400 flex-1">
+            Gamma
+            <ProTip text="Gamma adjusts mid-tone brightness. Values < 1 darken shadows, > 1 brighten them. Great for fine-tuning contrast without clipping highlights." />
+          </span>
+          <span className="text-xs text-zinc-500 font-mono">{settings.gamma}</span>
+        </div>
+        <input
+          type="range"
           min={0.1}
           max={3.0}
           step={0.1}
-          onChange={(v) => triggerUpdate({ gamma: v })}
+          value={settings.gamma}
+          onChange={(e) => triggerUpdate({ gamma: Number(e.target.value) })}
+          className="w-full"
         />
         <SliderControl
           label="Character Density"
@@ -335,12 +344,23 @@ export function ControlsPanel({ onChange }: ControlsPanelProps) {
           <Sun className="w-4 h-4 text-cyan-400" />
           Dithering
         </h3>
-        <SelectControl
-          label="Dithering Mode"
-          value={settings.ditheringMode}
-          options={ditherOptions}
-          onChange={(v) => triggerUpdate({ ditheringMode: v })}
-        />
+        <div className="space-y-1.5">
+          <div className="flex items-center">
+            <label className="text-xs font-medium text-zinc-400">
+              Dithering Mode
+              <ProTip text="Dithering simulates more shades by mixing characters. Floyd-Steinberg gives the smoothest gradients but is slower. Try 'Ordered' for a retro look." />
+            </label>
+          </div>
+          <select
+            value={settings.ditheringMode}
+            onChange={(e) => triggerUpdate({ ditheringMode: e.target.value as DitheringMode })}
+            className="w-full px-3 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-sm text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors"
+          >
+            {ditherOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Reset */}

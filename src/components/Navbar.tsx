@@ -28,7 +28,22 @@ export function Navbar() {
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href="https://github.com/Shishir-ip/pixel-to-ascii"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800/50 border border-zinc-700/50 hover:border-zinc-600 transition-all text-xs text-zinc-400 hover:text-zinc-200"
+            >
+              <Github className="w-3.5 h-3.5" />
+              <span>Star on GitHub</span>
+              <img 
+                src="https://img.shields.io/github/stars/Shishir-ip/pixel-to-ascii?style=social&label=&color=06b6d4" 
+                alt="GitHub stars" 
+                className="h-4"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+              />
+            </a>
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg hover:bg-zinc-800 transition-colors"
@@ -37,10 +52,10 @@ export function Navbar() {
               {dark ? <Sun className="w-5 h-5 text-zinc-400" /> : <Moon className="w-5 h-5 text-zinc-400" />}
             </button>
             <a
-              href="https://github.com"
+              href="https://github.com/Shishir-ip/pixel-to-ascii"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-lg hover:bg-zinc-800 transition-colors"
+              className="p-2 rounded-lg hover:bg-zinc-800 transition-colors sm:hidden"
               aria-label="GitHub"
             >
               <Github className="w-5 h-5 text-zinc-400" />

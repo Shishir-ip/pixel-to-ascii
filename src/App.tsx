@@ -2,7 +2,7 @@ import { useRef, useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Settings, Eye, Download, Image, ChevronDown, ChevronUp,
-  Layers
+  Layers, Sparkles, Monitor
 } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -12,6 +12,9 @@ import { PreviewPanel, FullscreenPreview } from './components/PreviewPanel';
 import { ExportPanel } from './components/ExportPanel';
 import { PresetGallery } from './components/PresetGallery';
 import { ToastContainer } from './components/Toast';
+import { MediaInput } from './components/MediaInput';
+import { EffectsPanel } from './components/EffectsPanel';
+import { Gallery } from './components/Gallery';
 import { useStore } from './store';
 import { 
   generateAscii, generateColoredAscii, generateEmoji, generateColoredEmoji
@@ -28,7 +31,7 @@ function App() {
   const uploadRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
   const [controlsOpen, setControlsOpen] = useState(true);
-  const [mobilePanel, setMobilePanel] = useState<'upload' | 'preview' | 'controls' | 'export'>('upload');
+  const [mobilePanel, setMobilePanel] = useState<'upload' | 'preview' | 'controls' | 'export' | 'media' | 'effects'>('upload');
 
   // Load persisted state on mount
   useEffect(() => {
@@ -133,6 +136,8 @@ function App() {
     { id: 'upload' as const, label: 'Upload', icon: Image },
     { id: 'preview' as const, label: 'Preview', icon: Eye },
     { id: 'controls' as const, label: 'Settings', icon: Settings },
+    { id: 'effects' as const, label: 'Effects', icon: Sparkles },
+    { id: 'media' as const, label: 'Media', icon: Monitor },
     { id: 'export' as const, label: 'Export', icon: Download },
   ];
 
@@ -177,6 +182,11 @@ function App() {
 
         {/* Desktop layout */}
         <div className="mt-6 lg:mt-8">
+          {/* Gallery - shown when no image */}
+          {!image && (
+            <Gallery />
+          )}
+
           {/* Upload zone - always visible at top */}
           <div ref={uploadRef} className="mb-6">
             <UploadZone onImageLoad={handleImageLoad} />
@@ -193,31 +203,43 @@ function App() {
               <div className="hidden lg:grid lg:grid-cols-12 gap-4 xl:gap-6">
                 {/* Controls Panel */}
                 <div className="col-span-12 xl:col-span-3 lg:col-span-3">
-                  <div className="glass-panel rounded-2xl p-4 lg:sticky lg:top-20 max-h-[80vh] overflow-y-auto">
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-sm font-semibold text-zinc-200 flex items-center gap-2">
-                        <Settings className="w-4 h-4 text-cyan-400" />
-                        Controls
-                      </h2>
-                      <button
-                        onClick={() => setControlsOpen(!controlsOpen)}
-                        className="p-1 rounded hover:bg-zinc-800 transition-colors"
-                      >
-                        {controlsOpen ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
-                      </button>
-                    </div>
-                    <AnimatePresence>
-                      {controlsOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
+                  <div className="glass-panel rounded-2xl p-4 lg:sticky lg:top-20 max-h-[80vh] overflow-y-auto space-y-6">
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-sm font-semibold text-zinc-200 flex items-center gap-2">
+                          <Settings className="w-4 h-4 text-cyan-400" />
+                          Controls
+                        </h2>
+                        <button
+                          onClick={() => setControlsOpen(!controlsOpen)}
+                          className="p-1 rounded hover:bg-zinc-800 transition-colors"
                         >
-                          <ControlsPanel onChange={() => {}} />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                          {controlsOpen ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
+                        </button>
+                      </div>
+                      <AnimatePresence>
+                        {controlsOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <ControlsPanel onChange={() => {}} />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                    
+                    {/* Effects Panel */}
+                    <div className="border-t border-zinc-800 pt-4">
+                      <EffectsPanel />
+                    </div>
+
+                    {/* Media Input */}
+                    <div className="border-t border-zinc-800 pt-4">
+                      <MediaInput />
+                    </div>
                   </div>
                 </div>
 
@@ -278,6 +300,30 @@ function App() {
                     </motion.div>
                   )}
                   
+                  {mobilePanel === 'effects' && (
+                    <motion.div
+                      key="effects-mobile"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="glass-panel rounded-2xl p-4"
+                    >
+                      <EffectsPanel />
+                    </motion.div>
+                  )}
+                  
+                  {mobilePanel === 'media' && (
+                    <motion.div
+                      key="media-mobile"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="glass-panel rounded-2xl p-4"
+                    >
+                      <MediaInput />
+                    </motion.div>
+                  )}
+                  
                   {mobilePanel === 'export' && (
                     <motion.div
                       key="export-mobile"
@@ -298,18 +344,50 @@ function App() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-800/50 py-8 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-sm text-zinc-500">
-            <Layers className="w-4 h-4" />
-            <span>Pixel to ASCII — All processing happens locally in your browser.</span>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+            <div className="flex items-center gap-2 text-sm text-zinc-500">
+              <Layers className="w-4 h-4" />
+              <span>Pixel to ASCII — All processing happens locally in your browser.</span>
+            </div>
+            <div className="flex items-center gap-4 text-xs text-zinc-600">
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                100% Private
+              </span>
+              <span>No uploads</span>
+              <span>No tracking</span>
+            </div>
           </div>
-          <div className="flex items-center gap-4 text-xs text-zinc-600">
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-500"></span>
-              100% Private
-            </span>
-            <span>No uploads</span>
-            <span>No tracking</span>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-zinc-800/30">
+            <p className="text-xs text-zinc-600">
+              Open Source by{' '}
+              <a 
+                href="https://github.com/Shishir-ip" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-cyan-500 hover:text-cyan-400 transition-colors"
+              >
+                Shishir-ip
+              </a>
+            </p>
+            <div className="flex items-center gap-3">
+              <a
+                href="https://github.com/Shishir-ip/pixel-to-ascii"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                View Source
+              </a>
+              <img 
+                src="https://img.shields.io/github/stars/Shishir-ip/pixel-to-ascii?style=social" 
+                alt="GitHub stars" 
+                className="h-5"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+              />
+            </div>
           </div>
         </div>
       </footer>

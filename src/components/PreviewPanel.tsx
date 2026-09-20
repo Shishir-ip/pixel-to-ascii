@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
 import { useStore } from '../store';
 import { Maximize2, Copy, Check } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { copyToClipboard } from '../lib/exportUtils';
+import { useTiltEffect } from '../hooks/useTiltEffect';
+import { getEffectClassName, applyTextEffect } from '../lib/effects';
 
 interface PreviewPanelProps {
   outputRef: React.RefObject<HTMLPreElement>;
@@ -11,6 +13,9 @@ interface PreviewPanelProps {
 export function PreviewPanel({ outputRef }: PreviewPanelProps) {
   const { outputText, outputHtml, settings, isProcessing, image, setShowFullscreen, addToast } = useStore();
   const [copied, setCopied] = useState(false);
+  const [effectText, setEffectText] = useState('');
+  const effectIntervalRef = useRef<ReturnType<typeof setInterval>>();
+  const { ref: tiltRef, style: tiltStyle } = useTiltEffect(5);
 
   const isColoredMode = settings.outputMode === 'colored-ascii';
   const isEmojiMode = settings.outputMode === 'emoji' || settings.outputMode === 'colored-emoji';
@@ -18,6 +23,32 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
   const bgColor = settings.backgroundColor === 'dark' ? 'bg-zinc-950' :
                   settings.backgroundColor === 'light' ? 'bg-zinc-100' :
                   settings.transparentBackground ? 'bg-[repeating-conic-gradient(#27272a_0%_25%,#18181b_0%_50%)_0_0/20px_20px]' : '';
+
+  // Apply visual effects to text output
+  useEffect(() => {
+    if (settings.visualEffect === 'matrix' || settings.visualEffect === 'glitch') {
+      // Animate text-based effects
+      const applyEffect = () => {
+        const processed = applyTextEffect(outputText, settings.visualEffect, settings.effectIntensity);
+        setEffectText(processed);
+      };
+      
+      applyEffect();
+      effectIntervalRef.current = setInterval(applyEffect, 100);
+      
+      return () => {
+        if (effectIntervalRef.current) clearInterval(effectIntervalRef.current);
+      };
+    } else {
+      setEffectText(outputText);
+    }
+  }, [outputText, settings.visualEffect, settings.effectIntensity]);
+
+  const displayText = (settings.visualEffect === 'matrix' || settings.visualEffect === 'glitch') 
+    ? effectText 
+    : outputText;
+  
+  const effectClass = getEffectClassName(settings.visualEffect);
 
   const handleCopy = async () => {
     const text = isColoredMode ? outputHtml : outputText;
@@ -41,10 +72,15 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
 
   if (isProcessing) {
     return (
-      <div className="flex items-center justify-center h-64 rounded-2xl border border-zinc-800 bg-zinc-900/50">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+      <div className="flex items-center justify-center h-64 rounded-2xl border border-zinc-800 bg-zinc-900/50 overflow-hidden">
+        <div className="text-center">
+          <div className="font-mono text-xs text-cyan-500/40 mb-3 tracking-wider animate-pulse">
+            {'@%#*+=-:.·░▒▓█'.split('').sort(() => Math.random() - 0.5).join('')}
+          </div>
           <p className="text-zinc-400 text-sm">Processing pixels...</p>
+          <div className="mt-3 w-32 h-1 mx-auto rounded-full bg-zinc-800 overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-cyan-500 to-violet-500 rounded-full animate-shimmer" style={{ width: '60%' }} />
+          </div>
         </div>
       </div>
     );
@@ -60,18 +96,26 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
 
   return (
     <motion.div
+      ref={tiltRef}
+      style={tiltStyle}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="rounded-2xl border border-zinc-800 overflow-hidden"
+      className={`rounded-2xl border border-zinc-800 overflow-hidden ${effectClass}`}
     >
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800 bg-zinc-900/80">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-medium text-zinc-400">
             {settings.outputWidth} × {outputText.split('\n').filter(l => l).length}
           </span>
           <span className="text-xs text-zinc-600">•</span>
           <span className="text-xs text-zinc-500 capitalize">{settings.outputMode.replace('-', ' ')}</span>
+          {settings.visualEffect !== 'none' && (
+            <>
+              <span className="text-xs text-zinc-600">•</span>
+              <span className="text-xs text-violet-400 capitalize">{settings.visualEffect}</span>
+            </>
+          )}
         </div>
         <div className="flex items-center gap-1">
           <button
@@ -96,7 +140,7 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
       </div>
 
       {/* Output */}
-      <div className={`overflow-x-auto overflow-y-auto max-h-[500px] p-4 ${bgColor}`}>
+      <div className={`overflow-x-auto overflow-y-auto max-h-[500px] p-4 relative ${bgColor}`}>
         {isColoredMode ? (
           <pre
             ref={outputRef}
@@ -118,7 +162,7 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
               letterSpacing: `${settings.letterSpacing}px`,
             }}
           >
-            {outputText}
+            {displayText}
           </pre>
         )}
       </div>
