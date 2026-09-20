@@ -20,9 +20,9 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
   const isColoredMode = settings.outputMode === 'colored-ascii';
   const isEmojiMode = settings.outputMode === 'emoji' || settings.outputMode === 'colored-emoji';
 
-  const bgColor = settings.backgroundColor === 'dark' ? 'bg-zinc-950' :
+  const bgColor = settings.backgroundColor === 'dark' ? 'bg-[#09090b]' :
                   settings.backgroundColor === 'light' ? 'bg-zinc-100' :
-                  settings.transparentBackground ? 'bg-[repeating-conic-gradient(#27272a_0%_25%,#18181b_0%_50%)_0_0/20px_20px]' : '';
+                  settings.transparentBackground ? 'bg-[repeating-conic-gradient(#18181b_0%_25%,#09090b_0%_50%)_0_0/20px_20px]' : '';
 
   // Apply visual effects to text output
   useEffect(() => {
@@ -64,21 +64,21 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
 
   if (!image) {
     return (
-      <div className="flex items-center justify-center h-64 rounded-2xl border border-zinc-800 bg-zinc-900/50">
-        <p className="text-zinc-500 text-sm">Upload an image to see the preview</p>
+      <div className="flex items-center justify-center h-full min-h-[300px] rounded-2xl border border-white/5 bg-white/[0.02]">
+        <p className="text-white/30 text-sm">Upload an image to see the preview</p>
       </div>
     );
   }
 
   if (isProcessing) {
     return (
-      <div className="flex items-center justify-center h-64 rounded-2xl border border-zinc-800 bg-zinc-900/50 overflow-hidden">
+      <div className="flex items-center justify-center h-full min-h-[300px] rounded-2xl border border-white/5 bg-white/[0.02] overflow-hidden">
         <div className="text-center">
           <div className="font-mono text-xs text-cyan-500/40 mb-3 tracking-wider animate-pulse">
             {'@%#*+=-:.·░▒▓█'.split('').sort(() => Math.random() - 0.5).join('')}
           </div>
-          <p className="text-zinc-400 text-sm">Processing pixels...</p>
-          <div className="mt-3 w-32 h-1 mx-auto rounded-full bg-zinc-800 overflow-hidden">
+          <p className="text-white/50 text-sm">Processing pixels...</p>
+          <div className="mt-3 w-32 h-1 mx-auto rounded-full bg-white/5 overflow-hidden">
             <div className="h-full bg-gradient-to-r from-cyan-500 to-violet-500 rounded-full animate-shimmer" style={{ width: '60%' }} />
           </div>
         </div>
@@ -88,8 +88,8 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
 
   if (!outputText) {
     return (
-      <div className="flex items-center justify-center h-64 rounded-2xl border border-zinc-800 bg-zinc-900/50">
-        <p className="text-zinc-500 text-sm">No output generated yet</p>
+      <div className="flex items-center justify-center h-full min-h-[300px] rounded-2xl border border-white/5 bg-white/[0.02]">
+        <p className="text-white/30 text-sm">No output generated yet</p>
       </div>
     );
   }
@@ -100,10 +100,10 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
       style={tiltStyle}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className={`rounded-2xl border border-zinc-800 overflow-hidden ${effectClass}`}
+      className={`h-full rounded-2xl border border-white/5 bg-black/40 backdrop-blur-sm overflow-hidden ${effectClass}`}
     >
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800 bg-zinc-900/80">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-black/20">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-medium text-zinc-400">
             {settings.outputWidth} × {outputText.split('\n').filter(l => l).length}
