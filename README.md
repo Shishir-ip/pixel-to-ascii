@@ -6,6 +6,7 @@
 
 ## ✨ Features
 
+### Core
 - **Multiple Output Modes**: ASCII, Colored ASCII, Emoji, Colored Emoji, Block Characters, Braille, Custom
 - **Rich Character Sets**: Standard, Detailed, Minimal, Blocks, Binary, Dots, and more
 - **Emoji Art**: Multiple emoji ramps (circles, squares, faces, hearts, nature, fire)
@@ -17,7 +18,19 @@
 - **Preset System**: Built-in presets + save your own
 - **100% Private**: All processing happens in your browser - no uploads
 - **Responsive Design**: Works beautifully on mobile, tablet, and desktop
-- **Smooth Animations**: Premium UI with Framer Motion
+
+### V2 — Next-Level Features
+- **🎥 Live Webcam to ASCII**: Stream your webcam and see it as live ASCII/Emoji art at 30fps
+- **🎬 Video File Support**: Upload MP4/WebM files for frame-by-frame ASCII video
+- **🎵 Audio-Reactive Mode**: Map audio frequencies to ASCII brightness (Labs)
+- **🔗 URL Import**: Paste any image URL to convert (with CORS fallback)
+- **⚡ Special Effects**: Matrix rain, Cyberpunk glitch, CRT monitor, Neon glow
+- **🎨 3D Tilt Preview**: Interactive parallax tilt on the preview card
+- **📊 FPS Monitor**: Real-time performance counter for live modes
+- **🖼️ Gallery & Inspiration**: Pre-made presets with one-click "Remix"
+- **💡 Pro Tips**: Contextual tooltips explaining advanced controls
+- **🔧 Web Worker**: Background processing for buttery-smooth UI
+- **✨ Shimmer Loading**: Animated ASCII character loading states
 
 ## 🚀 Quick Start
 
@@ -38,10 +51,14 @@ npm run build
 - **TypeScript** - Type safety
 - **Vite** - Build tool
 - **Tailwind CSS 4** - Styling
-- **Framer Motion** - Animations
+- **Framer Motion** - Animations & micro-interactions
 - **Zustand** - State management
 - **Lucide React** - Icons
 - **HTML5 Canvas API** - Image processing
+- **Web Workers** - Background thread processing
+- **Web Audio API** - Audio reactivity
+- **MediaRecorder API** - Video export
+- **getUserMedia** - Webcam streaming
 
 ## 📦 Deployment
 
