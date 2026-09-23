@@ -57,7 +57,7 @@ export function StudioDesktop() {
         <div className="flex-1 min-w-0">
           <CenterPanel />
         </div>
-        <div className="w-80 border-l border-white/5">
+        <div className="w-80 border-l border-white/5 h-full min-h-0 flex flex-col">
           <RightPanel />
         </div>
       </div>
