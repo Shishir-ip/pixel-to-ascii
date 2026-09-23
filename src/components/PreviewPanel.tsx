@@ -8,9 +8,10 @@ import { getEffectClassName, applyTextEffect } from '../lib/effects';
 
 interface PreviewPanelProps {
   outputRef: React.RefObject<HTMLPreElement>;
+  mobileFontSize?: number;
 }
 
-export function PreviewPanel({ outputRef }: PreviewPanelProps) {
+export function PreviewPanel({ outputRef, mobileFontSize }: PreviewPanelProps) {
   const { outputText, outputHtml, settings, isProcessing, image, setShowFullscreen, addToast } = useStore();
   const [copied, setCopied] = useState(false);
   const [effectText, setEffectText] = useState('');
@@ -49,6 +50,7 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
     : outputText;
   
   const effectClass = getEffectClassName(settings.visualEffect);
+  const effectiveFontSize = mobileFontSize ?? settings.fontSize;
 
   const handleCopy = async () => {
     const text = isColoredMode ? outputHtml : outputText;
@@ -146,7 +148,7 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
             ref={outputRef}
             className={`font-mono text-zinc-200 ${isEmojiMode ? 'emoji-output' : 'ascii-output'}`}
             style={{
-              fontSize: `${settings.fontSize}px`,
+              fontSize: `${effectiveFontSize}px`,
               lineHeight: settings.lineHeight,
               letterSpacing: `${settings.letterSpacing}px`,
             }}
@@ -157,7 +159,7 @@ export function PreviewPanel({ outputRef }: PreviewPanelProps) {
             ref={outputRef}
             className={`font-mono text-zinc-200 ${isEmojiMode ? 'emoji-output' : 'ascii-output'}`}
             style={{
-              fontSize: `${settings.fontSize}px`,
+              fontSize: `${effectiveFontSize}px`,
               lineHeight: settings.lineHeight,
               letterSpacing: `${settings.letterSpacing}px`,
             }}

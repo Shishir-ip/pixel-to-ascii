@@ -1,14 +1,12 @@
 import { motion } from 'framer-motion';
 import { Github } from 'lucide-react';
+import { LeftPanel } from './LeftPanel';
+import { CenterPanel } from './CenterPanel';
+import { RightPanel } from './RightPanel';
 
-interface StudioLayoutProps {
-  children: React.ReactNode;
-}
-
-export function StudioLayout({ children }: StudioLayoutProps) {
-
+export function StudioDesktop() {
   return (
-    <div className="h-screen w-screen flex flex-col bg-[#09090b] overflow-hidden relative">
+    <div className="h-dvh w-screen flex flex-col bg-[#09090b] overflow-hidden relative">
       {/* Noise texture overlay */}
       <div 
         className="absolute inset-0 opacity-[0.03] pointer-events-none z-0"
@@ -45,18 +43,23 @@ export function StudioLayout({ children }: StudioLayoutProps) {
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-xs text-white/70 hover:text-white"
             >
               <Github className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Star on GitHub</span>
+              <span>Star on GitHub</span>
             </a>
           </div>
         </div>
       </motion.header>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:flex-row relative z-10 overflow-hidden">
-        {/* Main Workspace */}
-        <main className="flex-1 overflow-hidden">
-          {children}
-        </main>
+      {/* Main Content - 3 Column Layout */}
+      <div className="flex-1 flex relative z-10 overflow-hidden">
+        <div className="w-80 border-r border-white/5">
+          <LeftPanel />
+        </div>
+        <div className="flex-1 min-w-0">
+          <CenterPanel />
+        </div>
+        <div className="w-80 border-l border-white/5">
+          <RightPanel />
+        </div>
       </div>
     </div>
   );

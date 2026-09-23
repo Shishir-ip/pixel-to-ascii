@@ -1,9 +1,7 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { StudioLayout } from './components/StudioLayout';
-import { LeftPanel } from './components/LeftPanel';
-import { CenterPanel } from './components/CenterPanel';
-import { RightPanel } from './components/RightPanel';
+import { StudioDesktop } from './components/StudioDesktop';
+import { StudioMobile } from './components/StudioMobile';
 import { LandingPage } from './components/LandingPage';
 import { FullscreenPreview } from './components/PreviewPanel';
 import { ToastContainer } from './components/Toast';
@@ -137,19 +135,15 @@ function App() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <StudioLayout>
-              <div className="flex flex-col lg:flex-row h-full">
-                <div className="lg:w-80 lg:border-r border-white/5">
-                  <LeftPanel />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <CenterPanel />
-                </div>
-                <div className="lg:w-80 lg:border-l border-white/5">
-                  <RightPanel />
-                </div>
-              </div>
-            </StudioLayout>
+            {/* Desktop Layout - 3 columns */}
+            <div className="hidden lg:block h-dvh">
+              <StudioDesktop />
+            </div>
+            
+            {/* Mobile Layout - single column with bottom tabs */}
+            <div className="lg:hidden h-dvh">
+              <StudioMobile />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

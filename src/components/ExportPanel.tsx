@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion';
 import { 
   Copy, Download, FileText, FileCode, Image, 
-  Share2, Save, Check, Sparkles
+  Save, Check, Sparkles
 } from 'lucide-react';
 import { useState } from 'react';
 import { useStore } from '../store';
 import { 
   downloadTextFile, downloadHtmlFile, downloadPng, downloadColoredPng,
-  downloadSvg, exportSettings, copyToClipboard, encodeSettingsToUrl
+  downloadSvg, exportSettings, copyToClipboard
 } from '../lib/exportUtils';
 
 interface ExportPanelProps {
@@ -41,14 +41,16 @@ export function ExportPanel({ outputRef }: ExportPanelProps) {
     addToast('Downloaded as HTML', 'success');
   };
 
-  const handleDownloadPng = (scale: number) => {
-    if (outputRef.current) {
+  const handleDownloadPng = async (scale: number) => {
+    try {
       if (settings.outputMode === 'colored-ascii') {
-        downloadColoredPng(outputHtml, settings, scale);
+        await downloadColoredPng(outputHtml, settings, scale);
       } else {
-        downloadPng(outputRef.current, settings, scale);
+        await downloadPng(outputText, settings, scale);
       }
       addToast(`Downloaded as PNG (${scale}x)`, 'success');
+    } catch (error) {
+      addToast(`Failed to export PNG: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
     }
   };
 
@@ -60,11 +62,6 @@ export function ExportPanel({ outputRef }: ExportPanelProps) {
   const handleExportSettings = () => {
     exportSettings(settings);
     addToast('Settings exported', 'success');
-  };
-
-  const handleCopyShareUrl = async () => {
-    const url = encodeSettingsToUrl(settings);
-    await handleCopy(url, 'Share URL');
   };
 
   const handleSavePreset = () => {
@@ -118,12 +115,6 @@ export function ExportPanel({ outputRef }: ExportPanelProps) {
               action="HTML"
             />
           )}
-          <ExportButton
-            icon={Share2}
-            label="Copy Share URL"
-            onClick={handleCopyShareUrl}
-            action="Share URL"
-          />
         </div>
       </div>
 
