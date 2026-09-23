@@ -23,10 +23,10 @@ export function RightPanel() {
       initial={{ x: 20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay: 0.2 }}
-      className="w-full lg:w-80 bg-black/20 backdrop-blur-xl flex flex-col overflow-hidden max-h-[50vh] lg:max-h-none"
+      className="w-full lg:w-80 bg-black/20 backdrop-blur-xl flex flex-col h-full min-h-0"
     >
       {/* Tab Bar */}
-      <div className="flex border-b border-white/5 bg-black/20 overflow-x-auto">
+      <div className="flex shrink-0 border-b border-white/5 bg-black/20 overflow-x-auto">
         {tabs.map(tab => (
           <button
             key={tab.id}
@@ -50,7 +50,7 @@ export function RightPanel() {
       </div>
 
       {/* Tab Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 min-h-0 overflow-y-auto">
         <motion.div
           key={activeTab}
           initial={{ opacity: 0, y: 10 }}
