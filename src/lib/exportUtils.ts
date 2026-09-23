@@ -57,132 +57,173 @@ pre {
   URL.revokeObjectURL(url);
 }
 
-export function downloadPng(
-  element: HTMLElement,
+export async function downloadPng(
+  text: string,
   settings: AsciiSettings,
   scale: number = 2
-): void {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d')!;
-  
-  const text = element.textContent || '';
-  const lines = text.split('\n').filter(l => l.length > 0);
-  
-  if (lines.length === 0) return;
-  
-  const fontSize = settings.fontSize * scale;
-  const lineHeight = settings.lineHeight * fontSize * 1.2;
-  
-  ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
-  
-  const maxLineWidth = Math.max(...lines.map(l => ctx.measureText(l).width));
-  
-  canvas.width = Math.ceil(maxLineWidth) + 20;
-  canvas.height = Math.ceil(lines.length * lineHeight) + 20;
-  
-  // Background
-  if (!settings.transparentBackground) {
-    const bgColor = settings.backgroundColor === 'dark' ? '#0a0a0a' : 
-                    settings.backgroundColor === 'light' ? '#ffffff' : 
-                    settings.customBgColor;
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-  
-  // Text
-  ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
-  ctx.fillStyle = '#e4e4e7';
-  ctx.textBaseline = 'top';
-  
-  lines.forEach((line, i) => {
-    ctx.fillText(line, 10, 10 + i * lineHeight);
-  });
-  
-  canvas.toBlob((blob) => {
-    if (!blob) return;
+): Promise<void> {
+  try {
+    const lines = text.split('\n').filter(l => l.length > 0);
+    
+    if (lines.length === 0) {
+      throw new Error('No ASCII content to export');
+    }
+    
+    // Wait for fonts to load
+    await document.fonts.ready;
+    
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    if (!ctx) {
+      throw new Error('Could not get canvas context');
+    }
+    
+    const fontSize = settings.fontSize * scale;
+    const lineHeight = settings.lineHeight * fontSize * 1.2;
+    
+    // Set font and measure
+    ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+    const charWidth = ctx.measureText('M').width;
+    const maxLineWidth = Math.max(...lines.map(l => l.length * charWidth));
+    
+    canvas.width = Math.ceil(maxLineWidth) + 20;
+    canvas.height = Math.ceil(lines.length * lineHeight) + 20;
+    
+    // Background
+    if (!settings.transparentBackground) {
+      const bgColor = settings.backgroundColor === 'dark' ? '#0a0a0a' : 
+                      settings.backgroundColor === 'light' ? '#ffffff' : 
+                      settings.customBgColor;
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    
+    // Text
+    ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+    ctx.fillStyle = '#e4e4e7';
+    ctx.textBaseline = 'top';
+    
+    lines.forEach((line, i) => {
+      ctx.fillText(line, 10, 10 + i * lineHeight);
+    });
+    
+    // Convert to blob
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob(resolve, 'image/png');
+    });
+    
+    if (!blob) {
+      throw new Error('Failed to create PNG blob');
+    }
+    
+    // Download
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ascii-art-${scale}x.png`;
+    a.download = `pixel-to-ascii-${scale}x.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, 'image/png');
+    
+    // Revoke after 1 second
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    
+  } catch (error) {
+    throw error;
+  }
 }
 
-export function downloadColoredPng(
+export async function downloadColoredPng(
   htmlContent: string,
   settings: AsciiSettings,
   scale: number = 2
-): void {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d')!;
-  
-  // Parse HTML to get colored spans
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = htmlContent;
-  
-  const lines = htmlContent.split('\n').filter(l => l.length > 0);
-  
-  if (lines.length === 0) return;
-  
-  const fontSize = settings.fontSize * scale;
-  const lineHeight = settings.lineHeight * fontSize * 1.2;
-  const charWidth = fontSize * 0.6;
-  
-  const maxCharsPerLine = Math.max(...lines.map(l => {
-    const temp = document.createElement('span');
-    temp.innerHTML = l;
-    return temp.textContent?.length || 0;
-  }));
-  
-  canvas.width = Math.ceil(maxCharsPerLine * charWidth) + 20;
-  canvas.height = Math.ceil(lines.length * lineHeight) + 20;
-  
-  // Background
-  if (!settings.transparentBackground) {
-    const bgColor = settings.backgroundColor === 'dark' ? '#0a0a0a' : 
-                    settings.backgroundColor === 'light' ? '#ffffff' : 
-                    settings.customBgColor;
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-  
-  // Render colored text
-  ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
-  ctx.textBaseline = 'top';
-  
-  const lineElements = tempDiv.querySelectorAll('span');
-  let currentLine = 0;
-  let currentX = 10;
-  
-  // Simple approach: render line by line
-  lines.forEach((line, lineIdx) => {
-    const spanRegex = /<span style="color:rgb\((\d+),(\d+),(\d+)\)">(.+?)<\/span>/g;
-    let match;
-    let x = 10;
+): Promise<void> {
+  try {
+    const lines = htmlContent.split('\n').filter(l => l.length > 0);
     
-    while ((match = spanRegex.exec(line)) !== null) {
-      const [, r, g, b, char] = match;
-      ctx.fillStyle = `rgb(${r},${g},${b})`;
-      const displayChar = char === '&nbsp;' ? ' ' : char.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-      ctx.fillText(displayChar, x, 10 + lineIdx * lineHeight);
-      x += charWidth;
+    if (lines.length === 0) {
+      throw new Error('No colored ASCII content to export');
     }
-  });
-  
-  canvas.toBlob((blob) => {
-    if (!blob) return;
+    
+    // Wait for fonts to load
+    await document.fonts.ready;
+    
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    if (!ctx) {
+      throw new Error('Could not get canvas context');
+    }
+    
+    const fontSize = settings.fontSize * scale;
+    const lineHeight = settings.lineHeight * fontSize * 1.2;
+    
+    // Set font and measure
+    ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+    const charWidth = ctx.measureText('M').width;
+    
+    // Count max chars per line (parse HTML to get text length)
+    const maxCharsPerLine = Math.max(...lines.map(l => {
+      const temp = document.createElement('span');
+      temp.innerHTML = l;
+      return temp.textContent?.length || 0;
+    }));
+    
+    canvas.width = Math.ceil(maxCharsPerLine * charWidth) + 20;
+    canvas.height = Math.ceil(lines.length * lineHeight) + 20;
+    
+    // Background
+    if (!settings.transparentBackground) {
+      const bgColor = settings.backgroundColor === 'dark' ? '#0a0a0a' : 
+                      settings.backgroundColor === 'light' ? '#ffffff' : 
+                      settings.customBgColor;
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    
+    // Render colored text
+    ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+    ctx.textBaseline = 'top';
+    
+    lines.forEach((line, lineIdx) => {
+      const spanRegex = /<span style="color:rgb\((\d+),(\d+),(\d+)\)">(.+?)<\/span>/g;
+      let match;
+      let x = 10;
+      
+      while ((match = spanRegex.exec(line)) !== null) {
+        const [, r, g, b, char] = match;
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        const displayChar = char === '&nbsp;' ? ' ' : char.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        ctx.fillText(displayChar, x, 10 + lineIdx * lineHeight);
+        x += charWidth;
+      }
+    });
+    
+    // Convert to blob
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob(resolve, 'image/png');
+    });
+    
+    if (!blob) {
+      throw new Error('Failed to create PNG blob');
+    }
+    
+    // Download
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ascii-art-colored-${scale}x.png`;
+    a.download = `pixel-to-ascii-colored-${scale}x.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, 'image/png');
+    
+    // Revoke after 1 second
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    
+  } catch (error) {
+    throw error;
+  }
 }
 
 export function downloadSvg(text: string, settings: AsciiSettings): void {
