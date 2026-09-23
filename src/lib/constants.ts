@@ -172,9 +172,6 @@ export const DEFAULT_SETTINGS: AsciiSettings = {
   charDensity: 1.0,
   visualEffect: 'none',
   effectIntensity: 50,
-  mirrorWebcam: true,
-  audioSensitivity: 50,
-  webcamFps: 30,
 };
 
 export const SAMPLE_IMAGES = [
