@@ -128,7 +128,7 @@ function App() {
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.5 }}
           >
-            <LandingPage onEnterStudio={handleEnterStudio} />
+            <LandingPage onEnterStudio={handleEnterStudio} onTryDemo={handleTryDemo} />
           </motion.div>
         ) : (
           <motion.div
@@ -138,10 +138,16 @@ function App() {
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
             <StudioLayout>
-              <div className="flex h-full">
-                <LeftPanel />
-                <CenterPanel />
-                <RightPanel />
+              <div className="flex flex-col lg:flex-row h-full">
+                <div className="lg:w-80 lg:border-r border-white/5">
+                  <LeftPanel />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <CenterPanel />
+                </div>
+                <div className="lg:w-80 lg:border-l border-white/5">
+                  <RightPanel />
+                </div>
               </div>
             </StudioLayout>
           </motion.div>

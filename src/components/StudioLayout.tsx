@@ -1,15 +1,11 @@
 import { motion } from 'framer-motion';
-import { Home, Palette, Image, Settings, Github } from 'lucide-react';
-import { useState } from 'react';
-
-type View = 'studio' | 'gallery' | 'settings';
+import { Github } from 'lucide-react';
 
 interface StudioLayoutProps {
   children: React.ReactNode;
 }
 
 export function StudioLayout({ children }: StudioLayoutProps) {
-  const [activeView, setActiveView] = useState<View>('studio');
 
   return (
     <div className="h-screen w-screen flex flex-col bg-[#09090b] overflow-hidden relative">
@@ -56,80 +52,12 @@ export function StudioLayout({ children }: StudioLayoutProps) {
       </motion.header>
 
       {/* Main Content */}
-      <div className="flex-1 flex relative z-10 overflow-hidden">
-        {/* Left Sidebar */}
-        <motion.nav
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="w-16 border-r border-white/5 bg-black/20 backdrop-blur-xl flex flex-col items-center py-4 gap-2"
-        >
-          <SidebarButton
-            icon={Home}
-            label="Studio"
-            active={activeView === 'studio'}
-            onClick={() => setActiveView('studio')}
-          />
-          <SidebarButton
-            icon={Palette}
-            label="Gallery"
-            active={activeView === 'gallery'}
-            onClick={() => setActiveView('gallery')}
-          />
-          <SidebarButton
-            icon={Image}
-            label="Upload"
-            active={false}
-            onClick={() => {}}
-          />
-          <div className="flex-1" />
-          <SidebarButton
-            icon={Settings}
-            label="Settings"
-            active={activeView === 'settings'}
-            onClick={() => setActiveView('settings')}
-          />
-        </motion.nav>
-
+      <div className="flex-1 flex flex-col lg:flex-row relative z-10 overflow-hidden">
         {/* Main Workspace */}
         <main className="flex-1 overflow-hidden">
           {children}
         </main>
       </div>
     </div>
-  );
-}
-
-function SidebarButton({ 
-  icon: Icon, 
-  label, 
-  active, 
-  onClick 
-}: { 
-  icon: any; 
-  label: string; 
-  active: boolean; 
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`group relative w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
-        active
-          ? 'bg-cyan-500/20 text-cyan-400'
-          : 'text-white/40 hover:text-white/70 hover:bg-white/5'
-      }`}
-    >
-      <Icon className="w-5 h-5" />
-      <span className="absolute left-full ml-2 px-2 py-1 rounded-md bg-black/80 text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
-        {label}
-      </span>
-      {active && (
-        <motion.div
-          layoutId="sidebar-indicator"
-          className="absolute left-0 w-0.5 h-6 bg-cyan-400 rounded-r"
-        />
-      )}
-    </button>
   );
 }

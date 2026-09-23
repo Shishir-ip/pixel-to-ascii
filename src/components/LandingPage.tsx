@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { ArrowRight, Zap, Lock, Sparkles, Palette, Video, Download } from 'lucide-react';
+import { ArrowRight, Zap, Lock, Sparkles, Palette, Download } from 'lucide-react';
 
 interface LandingPageProps {
   onEnterStudio: () => void;
+  onTryDemo?: () => void;
 }
 
 const asciiChars = '@%#*+=-:.·░▒▓█';
 
-export function LandingPage({ onEnterStudio }: LandingPageProps) {
+export function LandingPage({ onEnterStudio, onTryDemo }: LandingPageProps) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -104,7 +105,7 @@ export function LandingPage({ onEnterStudio }: LandingPageProps) {
               <span>Enter Studio</span>
               <ArrowRight className="w-4 h-4" />
             </MagneticButton>
-            <MagneticButton onClick={onEnterStudio} variant="secondary">
+            <MagneticButton onClick={onTryDemo || onEnterStudio} variant="secondary">
               <span>Try Demo</span>
             </MagneticButton>
           </div>
@@ -202,20 +203,6 @@ export function LandingPage({ onEnterStudio }: LandingPageProps) {
             </span>
             <h3 className="text-lg font-semibold text-white mt-2">Emoji Mosaics</h3>
             <p className="text-sm text-white/50 mt-1">Create stunning art using emoji characters.</p>
-          </BentoCard>
-
-          {/* Card - Video/Webcam */}
-          <BentoCard gradient="from-violet-500/20 to-purple-500/10">
-            <div className="flex items-center gap-2 mb-4">
-              <Video className="w-8 h-8 text-violet-400" />
-              <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-            </div>
-            <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-violet-500/20 text-violet-400 text-[10px] font-medium">
-              <Zap className="w-3 h-3" />
-              Live Mode
-            </span>
-            <h3 className="text-lg font-semibold text-white mt-2">Webcam & Video</h3>
-            <p className="text-sm text-white/50 mt-1">Real-time ASCII from your camera or video files.</p>
           </BentoCard>
         </motion.div>
 

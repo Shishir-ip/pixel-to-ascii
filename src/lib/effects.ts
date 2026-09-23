@@ -1,7 +1,7 @@
 // Visual Effects Library - Post-processing for ASCII output
 // These effects are applied to the text output after conversion
 
-export type EffectType = 'none' | 'matrix' | 'glitch' | 'crt' | 'neon' | 'parallax';
+export type EffectType = 'none' | 'matrix' | 'glitch' | 'crt' | 'neon';
 
 // Matrix Rain Effect - randomly shifts characters while maintaining image shape
 export function applyMatrixEffect(text: string, intensity: number = 50): string {

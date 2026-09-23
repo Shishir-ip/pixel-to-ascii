@@ -6,11 +6,7 @@ export type DitheringMode = 'none' | 'threshold' | 'ordered' | 'floyd-steinberg'
 
 export type BackgroundMode = 'dark' | 'light' | 'transparent' | 'custom';
 
-export type MediaMode = 'image' | 'webcam' | 'video' | 'audio' | 'url';
-
-export type VisualEffect = 'none' | 'matrix' | 'glitch' | 'crt' | 'neon' | 'parallax';
-
-export type InputMode = 'upload' | 'preview' | 'controls' | 'export' | 'media' | 'effects' | 'gallery';
+export type VisualEffect = 'none' | 'matrix' | 'glitch' | 'crt' | 'neon';
 
 export interface AsciiSettings {
   outputMode: OutputMode;
@@ -42,9 +38,6 @@ export interface AsciiSettings {
   // V2 fields
   visualEffect: VisualEffect;
   effectIntensity: number;
-  mirrorWebcam: boolean;
-  audioSensitivity: number;
-  webcamFps: number;
 }
 
 export interface ImageData {

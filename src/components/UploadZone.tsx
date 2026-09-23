@@ -136,7 +136,7 @@ export function UploadZone({ onImageLoad }: UploadZoneProps) {
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-8 sm:p-12 text-center transition-all duration-300 ${
+              className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-4 sm:p-6 lg:p-8 text-center transition-all duration-300 ${
                 isDragging 
                   ? 'border-cyan-500 bg-cyan-500/5 shadow-lg shadow-cyan-500/20' 
                   : 'border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800/30'
@@ -163,10 +163,10 @@ export function UploadZone({ onImageLoad }: UploadZoneProps) {
                   <Upload className={`w-8 h-8 ${isDragging ? 'text-cyan-400' : 'text-zinc-400'}`} />
                 </div>
                 <div>
-                  <p className="text-lg font-medium text-zinc-200 mb-1">
+                  <p className="text-base sm:text-lg font-medium text-zinc-200 mb-1">
                     {isDragging ? 'Drop your image here' : 'Drop an image or click to upload'}
                   </p>
-                  <p className="text-sm text-zinc-500">
+                  <p className="text-xs sm:text-sm text-zinc-500">
                     PNG, JPG, WEBP, GIF, AVIF, BMP • Max 50MB
                   </p>
                   <p className="text-xs text-zinc-600 mt-2">

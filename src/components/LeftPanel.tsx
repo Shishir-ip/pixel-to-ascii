@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { UploadZone } from './UploadZone';
-import { MediaInput } from './MediaInput';
 import { useStore } from '../store';
 import { FileImage } from 'lucide-react';
 
@@ -12,7 +11,7 @@ export function LeftPanel() {
       initial={{ x: -20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay: 0.2 }}
-      className="w-80 border-r border-white/5 bg-black/20 backdrop-blur-xl overflow-y-auto"
+      className="w-full lg:w-80 bg-black/20 backdrop-blur-xl overflow-y-auto max-h-[40vh] lg:max-h-none"
     >
       <div className="p-4 space-y-4">
         {/* Upload Section */}
@@ -45,11 +44,6 @@ export function LeftPanel() {
           </motion.div>
         )}
 
-        {/* Media Input */}
-        <div className="space-y-3">
-          <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wider">Media</h3>
-          <MediaInput />
-        </div>
       </div>
     </motion.div>
   );

@@ -23,15 +23,15 @@ export function RightPanel() {
       initial={{ x: 20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay: 0.2 }}
-      className="w-80 border-l border-white/5 bg-black/20 backdrop-blur-xl flex flex-col overflow-hidden"
+      className="w-full lg:w-80 bg-black/20 backdrop-blur-xl flex flex-col overflow-hidden max-h-[50vh] lg:max-h-none"
     >
       {/* Tab Bar */}
-      <div className="flex border-b border-white/5 bg-black/20">
+      <div className="flex border-b border-white/5 bg-black/20 overflow-x-auto">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 flex flex-col items-center gap-1 py-3 px-2 text-[10px] font-medium transition-all relative ${
+            className={`flex-1 min-w-[70px] flex flex-col items-center gap-1 py-3 px-2 text-[10px] font-medium transition-all relative whitespace-nowrap ${
               activeTab === tab.id
                 ? 'text-cyan-400'
                 : 'text-white/40 hover:text-white/70'
